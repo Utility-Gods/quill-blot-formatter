@@ -1,15 +1,14 @@
 // @flow
 
-import { Aligner } from './Aligner';
-import type { Alignment } from './Alignment';
-import type { AlignOptions } from '../../Options';
+import { Aligner } from "./Aligner";
+import type { Alignment } from "./Alignment";
+import type { AlignOptions } from "../../Options";
 
-const LEFT_ALIGN = 'left';
-const CENTER_ALIGN = 'center';
-const RIGHT_ALIGN = 'right';
-
+const LEFT_ALIGN = "left";
+const CENTER_ALIGN = "center";
+const RIGHT_ALIGN = "right";
 export default class DefaultAligner implements Aligner {
-  alignments: { [string]: Alignment };
+  alignments: Record<string, Alignment>;
   alignAttribute: string;
   applyStyle: boolean;
 
@@ -22,7 +21,7 @@ export default class DefaultAligner implements Aligner {
         icon: options.icons.left,
         apply: (el: HTMLElement) => {
           this.setAlignment(el, LEFT_ALIGN);
-          this.setStyle(el, 'inline', 'left', '0 1em 1em 0');
+          this.setStyle(el, "inline", "left", "0 1em 1em 0");
         },
       },
       [CENTER_ALIGN]: {
@@ -30,7 +29,7 @@ export default class DefaultAligner implements Aligner {
         icon: options.icons.center,
         apply: (el: HTMLElement) => {
           this.setAlignment(el, CENTER_ALIGN);
-          this.setStyle(el, 'block', null, 'auto');
+          this.setStyle(el, "block", null, "auto");
         },
       },
       [RIGHT_ALIGN]: {
@@ -38,14 +37,14 @@ export default class DefaultAligner implements Aligner {
         icon: options.icons.right,
         apply: (el: HTMLElement) => {
           this.setAlignment(el, RIGHT_ALIGN);
-          this.setStyle(el, 'inline', 'right', '0 0 1em 1em');
+          this.setStyle(el, "inline", "right", "0 0 1em 1em");
         },
       },
     };
   }
 
   getAlignments(): Alignment[] {
-    return Object.keys(this.alignments).map(k => this.alignments[k]);
+    return Object.keys(this.alignments).map((k) => this.alignments[k]);
   }
 
   clear(el: HTMLElement): void {
@@ -61,11 +60,16 @@ export default class DefaultAligner implements Aligner {
     el.setAttribute(this.alignAttribute, value);
   }
 
-  setStyle(el: HTMLElement, display: ?string, float: ?string, margin: ?string) {
+  setStyle(
+    el: HTMLElement,
+    display: string | null | undefined,
+    float: string | null | undefined,
+    margin: string | null | undefined,
+  ) {
     if (this.applyStyle) {
-      el.style.setProperty('display', display);
-      el.style.setProperty('float', float);
-      el.style.setProperty('margin', margin);
+      el.style.setProperty("display", display);
+      el.style.setProperty("float", float);
+      el.style.setProperty("margin", margin);
     }
   }
 }

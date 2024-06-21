@@ -1,12 +1,12 @@
 // @flow
 
-import { Toolbar } from './Toolbar';
-import { Aligner } from './Aligner';
-import type { Alignment } from './Alignment';
-import BlotFormatter from '../../BlotFormatter';
+import { Toolbar } from "./Toolbar";
+import { Aligner } from "./Aligner";
+import type { Alignment } from "./Alignment";
+import BlotFormatter from "../../BlotFormatter";
 
 export default class DefaultToolbar implements Toolbar {
-  toolbar: ?HTMLElement;
+  toolbar: HTMLElement | null | undefined;
   buttons: HTMLElement[];
 
   constructor() {
@@ -15,11 +15,10 @@ export default class DefaultToolbar implements Toolbar {
   }
 
   create(formatter: BlotFormatter, aligner: Aligner): HTMLElement {
-    const toolbar = document.createElement('div');
+    const toolbar = document.createElement("div");
     toolbar.classList.add(formatter.options.align.toolbar.mainClassName);
     this.addToolbarStyle(formatter, toolbar);
     this.addButtons(formatter, toolbar, aligner);
-
     this.toolbar = toolbar;
     return this.toolbar;
   }
@@ -42,22 +41,26 @@ export default class DefaultToolbar implements Toolbar {
   addButtonStyle(button: HTMLElement, index: number, formatter: BlotFormatter) {
     if (formatter.options.align.toolbar.buttonStyle) {
       Object.assign(button.style, formatter.options.align.toolbar.buttonStyle);
+
       if (index > 0) {
-        button.style.borderLeftWidth = '0'; // eslint-disable-line no-param-reassign
+        button.style.borderLeftWidth = "0"; // eslint-disable-line no-param-reassign
       }
     }
 
     if (formatter.options.align.toolbar.svgStyle) {
-      Object.assign(button.children[0].style, formatter.options.align.toolbar.svgStyle);
+      Object.assign(
+        button.children[0].style,
+        formatter.options.align.toolbar.svgStyle,
+      );
     }
   }
 
   addButtons(formatter: BlotFormatter, toolbar: HTMLElement, aligner: Aligner) {
     aligner.getAlignments().forEach((alignment, i) => {
-      const button = document.createElement('span');
+      const button = document.createElement("span");
       button.classList.add(formatter.options.align.toolbar.buttonClassName);
       button.innerHTML = alignment.icon;
-      button.addEventListener('click', () => {
+      button.addEventListener("click", () => {
         this.onButtonClick(button, formatter, alignment, aligner);
       });
       this.preselectButton(button, alignment, formatter, aligner);
@@ -78,6 +81,7 @@ export default class DefaultToolbar implements Toolbar {
     }
 
     const target = formatter.currentSpec.getTargetElement();
+
     if (!target) {
       return;
     }
@@ -98,6 +102,7 @@ export default class DefaultToolbar implements Toolbar {
     }
 
     const target = formatter.currentSpec.getTargetElement();
+
     if (!target) {
       return;
     }
@@ -112,7 +117,10 @@ export default class DefaultToolbar implements Toolbar {
     alignment: Alignment,
     aligner: Aligner,
   ) {
-    this.buttons.forEach((b) => { this.deselectButton(formatter, b); });
+    this.buttons.forEach((b) => {
+      this.deselectButton(formatter, b);
+    });
+
     if (aligner.isAligned(alignTarget, alignment)) {
       if (formatter.options.align.toolbar.allowDeselect) {
         aligner.clear(alignTarget);
@@ -128,16 +136,18 @@ export default class DefaultToolbar implements Toolbar {
   }
 
   selectButton(formatter: BlotFormatter, button: HTMLElement) {
-    button.classList.add('is-selected');
+    button.classList.add("is-selected");
+
     if (formatter.options.align.toolbar.addButtonSelectStyle) {
-      button.style.setProperty('filter', 'invert(20%)');
+      button.style.setProperty("filter", "invert(20%)");
     }
   }
 
   deselectButton(formatter: BlotFormatter, button: HTMLElement) {
-    button.classList.remove('is-selected');
+    button.classList.remove("is-selected");
+
     if (formatter.options.align.toolbar.addButtonSelectStyle) {
-      button.style.removeProperty('filter');
+      button.style.removeProperty("filter");
     }
   }
 }
